@@ -255,7 +255,7 @@ $barang1 = $conn->query("SELECT * FROM stok");
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_pembelian.php',
+                        url: 'delete_penjualan.php',
                         type: 'POST',
                         data: { iddep: iddep },
                         success: function(response) {

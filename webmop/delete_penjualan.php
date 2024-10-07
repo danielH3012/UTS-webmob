@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
         echo "data gagal dihapus";
     }
     $stmt->close();
-    header("Location: pembelian.php");
+    header("Location: ribet.php");
     exit();
 
 }

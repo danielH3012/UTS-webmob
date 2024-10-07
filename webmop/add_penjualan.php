@@ -47,10 +47,10 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
         $_SESSION['massage'] = ['type'=> 'success', 'text'=>'Data departemen gagal ditambah.'];
     }
     $stmt->close();
-    header("Location: penjualan.php");
+    header("Location: ribet.php");
     exit();
 }else{
-    header("Location: penjualan.php");
+    header("Location: ribet.php");
     exit();
 }
 ?>
