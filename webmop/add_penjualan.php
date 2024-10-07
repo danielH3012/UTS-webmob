@@ -32,6 +32,10 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
     $stmt->close();
 
     $stok = intval($barang) - intval($jumlah); 
+    if($stok < 0 ){
+        header("Location: ribet.php");
+        exit();
+    }
 
     $stmt = $conn->prepare("UPDATE stok SET jumlah_barang = ? where id_barang = ?");
     $stmt->bind_param("ss",$stok, $idbar);
