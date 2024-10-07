@@ -5,7 +5,7 @@ require 'header.php';
 $iduser = $_SESSION['user'];
 
 // Ambil data user dari database
-$stmt = $conn->prepare("SELECT username, email FROM user WHERE id_user = ?");
+$stmt = $conn->prepare("SELECT username, password FROM user WHERE id_user = ?");
 $stmt->bind_param("i", $iduser);
 $stmt->execute();
 $stmt->bind_result($username, $email);
@@ -19,35 +19,21 @@ $stmt->bind_result($namaUsaha, $alamatUsaha);
 $stmt->fetch();
 $stmt->close();
 
-//get data from db
-$sql = "SELECT * from pegawai";
+$sql = "SELECT * from penjualan where status_pesanan = 'belum'";
 $result = mysqli_query($conn, $sql);
-$pegawai = mysqli_num_rows( $result );
+$penjualan = mysqli_num_rows( $result );
 
-$sql = "SELECT * from penghargaan";
+$sql = "SELECT * from penjualan where status_pesanan = 'lunas'";
 $result = mysqli_query($conn, $sql);
-$penghargaan = mysqli_num_rows( $result );
+$penjualan_done = mysqli_num_rows( $result );
 
-$sql = "SELECT * from peringatan";
+$sql = "SELECT * from pembelian where status = 'belum'";
 $result = mysqli_query($conn, $sql);
-$peringatan = mysqli_num_rows( $result );
+$pembelian = mysqli_num_rows( $result );
 
-$sql = "SELECT * from cuti";
+$sql = "SELECT * from pembelian where status = 'lunas'";
 $result = mysqli_query($conn, $sql);
-$cuti = mysqli_num_rows( $result );
-
-// Ambil data dari tabel departemen
-$result = $conn->query("SELECT * FROM departemen");
-
-// Dapatkan nomor urut terbaru untuk iddep baru
-$stmt = $conn->query("SELECT id_departemen FROM departemen ORDER BY id_departemen DESC LIMIT 1");
-$latestiddep = $stmt->fetch_assoc();
-$urut = 1;
-if ($latestiddep) {
-    $latestNumber = (int) substr($latestiddep['id_departemen'], 1);
-    $urut = $latestNumber + 1;
-}
-$newiddep = 'D' . str_pad($urut, 3, '0', STR_PAD_LEFT);
+$pembelian_done = mysqli_num_rows( $result );
 
 // Simpan pesan ke variabel dan hapus dari session
 $message = null;
@@ -108,15 +94,15 @@ if (isset($_SESSION['message'])) {
         <div class="container-fluid mt-3">
             <div class="cards-container">
                 <!-- Card 1: Total Pegawai -->
-                <div class="card card-tipe">
+                <div class="card card-merek">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5 class="card-title">Total Pegawai</h5>
-                                <h4><p><?php echo $pegawai?></p></h4>
+                                <h5 class="card-title">Penjualan Belum Dibayar</h5>
+                                <h4><p><?php echo $penjualan?></p></h4>
                             </div>
                             <div class="card-icon-wrapper">
-                                <i class="fas fa-users card-icon"></i>
+                                <i class="fas fa-exclamation-triangle card-icon"></i>
                             </div>
                         </div>
                     </div>
@@ -127,8 +113,8 @@ if (isset($_SESSION['message'])) {
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5>Penghargaan</h5>
-                                <h4><p><?php echo $penghargaan?></p></h4>
+                                <h5>Penjualan Lunas</h5>
+                                <h4><p><?php echo $penjualan_done?></p></h4>
                             </div>
                             <div class="card-icon-wrapper">
                                 <i class="fas fa-award card-icon"></i>
@@ -138,12 +124,12 @@ if (isset($_SESSION['message'])) {
                 </div>
 
                 <!-- Card 3: Peringatan -->
-                <div class="card card-merek">
+                <div class="card card-polis">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5>Peringatan</h5>
-                                <h4><p><?php echo $peringatan?></p></h4>
+                                <h5>Pembelian belum lunas</h5>
+                                <h4><p><?php echo $pembelian?></p></h4>
                             </div>
                             <div class="card-icon-wrapper">
                                 <i class="fas fa-exclamation-triangle card-icon"></i>
@@ -152,21 +138,20 @@ if (isset($_SESSION['message'])) {
                     </div>
                 </div>
 
-                <!-- Card 4: Cuti -->
-                <div class="card card-polis">
+                <!-- Card 3: Peringatan -->
+                <div class="card card-tipe">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5>Cuti</h5>
-                                <h4><p><?php echo $cuti?></p></h4>
+                                <h5>Pembelian lunas</h5>
+                                <h4><p><?php echo $pembelian_done?></p></h4>
                             </div>
                             <div class="card-icon-wrapper">
-                                <i class="fas fa-calendar-alt card-icon"></i>
+                                <i class="fas fa-users card-icon"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
             <!-- Full-width card for Aplikasi Kepegawaian -->
             <div class="full-width-card">
